@@ -4,15 +4,20 @@ from threading import Timer
 import logging
 
 # Setup logging
+import apm_window
+
 logging.basicConfig(filename="key_log.txt", level=logging.DEBUG, format='%(asctime)s: %(message)s')
 minutes_passed = 0
 strokes_mouse_and_keyboard = 0
 keys = ["minute", "actions"]
 list_apm_dict = [dict.fromkeys(keys, None)]
 
-def controller():
+
+def main():
     with Key_Listener(on_press=on_press) as key_listener:  # Create an instance of Key_Listener
-        with Mouse_Listener(on_click=on_click, on_scroll=on_scroll) as mouse_listener:  # Create instance of Mouse_Listen
+        with Mouse_Listener(on_click=on_click, on_scroll=on_scroll) as mouse_listener:  # Create instance of
+            # Mouse_Listener
+            apm_window.apm_window()
             start_timer()
             mouse_listener.join()
             key_listener.join()
@@ -37,6 +42,7 @@ def timeout():
     logging.info(f"minutes passed: {minutes_passed}, keys_pressed: {strokes_mouse_and_keyboard}")
     values = [minutes_passed, strokes_mouse_and_keyboard]
     new_dict = {keys[0]: values[0], keys[1]: values[1]}
+    apm_window.set_apm_text("100")
     list_apm_dict.append(new_dict)
     reset_strokes_mouse_and_keyboard_counter()
     start_timer()
@@ -64,4 +70,4 @@ def reset_strokes_mouse_and_keyboard_counter():
 
 
 if __name__ == '__main__':
-    controller()
+    main()
